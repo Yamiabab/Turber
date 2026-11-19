@@ -677,6 +677,21 @@ fn send_unicode_text(text: &str) -> bool {
     true
 }
 
+// 非 Windows 平台：桌面输入注入尚未实现，这里保留同名桩函数，
+// 让整个 crate 能在 macOS / Linux 上编译，调用时会得到明确的不支持提示。
+#[cfg(not(windows))]
+fn key_code(_name: &str) -> Option<u16> {
+    None
+}
+
+#[cfg(not(windows))]
+fn send_key(_code: u16, _up: bool) {}
+
+#[cfg(not(windows))]
+fn send_mouse_button(_button: &str, _up: bool) -> Result<(), String> {
+    Err("当前平台不支持鼠标注入".to_string())
+}
+
 // ---------------------------------------------------------------- emergency stop
 
 fn watch_generation() -> &'static AtomicU64 {
