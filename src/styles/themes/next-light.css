@@ -1,0 +1,21 @@
+/* 浅色预设：按参考图取色 —— 纯白底、浅灰描边、高对比深灰文字、蓝色强调 */
+:root[data-turber-theme="next-light"] {
+  color-scheme: light;
+  --turber-bg: #ffffff;
+  --turber-sidebar: #fafafa;
+  --turber-bg-elevated: #ffffff;
+  --turber-surface: #ffffff;
+  --turber-surface-hover: #f5f5f5;
+  --turber-border: #e5e5e5;
+  --turber-fg: #333333;
+  --turber-fg-muted: #666666;
+  --turber-accent: #2563eb;
+  --turber-accent-2: #1d4ed8;
+  --turber-accent-fg: #ffffff;
+  --turber-field: #ffffff;
+  --turber-danger: #dc2626;
+  --turber-success: #16a34a;
+  --turber-radius: 10px;
+  --turber-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --turber-opacity: 1;
+}

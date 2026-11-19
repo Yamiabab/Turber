@@ -1,0 +1,41 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Rust / Tauri 构建产物
+src-tauri/target
+src-tauri/gen
+
+# 本地账户服务的运行数据与前端构建产物（源码照常入库）
+/server/data/
+/server/node_modules/
+/server/public/
+/server/*.log
+*.db
+*.db-wal
+*.db-shm
+
+# 本地环境变量
+.env
+.env.*

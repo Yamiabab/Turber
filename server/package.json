@@ -1,0 +1,22 @@
+{
+  "name": "turber-server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Turber 本地账号服务：账户页 + 16 位授权 ID + TB 验证码",
+  "scripts": {
+    "build:ui": "node scripts/build-ui.mjs",
+    "start": "node --experimental-sqlite src/index.mjs",
+    "dev": "node --experimental-sqlite --watch src/index.mjs"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@fontsource/roboto": "^5.3.0",
+    "@mui/icons-material": "^6.5.0",
+    "@mui/material": "^6.5.0",
+    "esbuild": "^0.28.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

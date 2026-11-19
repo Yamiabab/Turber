@@ -1,0 +1,148 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./tokens.css";
+@import "./themes/next-dark.css";
+@import "./themes/next-light.css";
+
+@theme inline {
+  --radius-thread: 1rem;
+  --color-background: var(--turber-bg);
+  --color-foreground: var(--turber-fg);
+  --color-card: var(--turber-surface);
+  --color-card-foreground: var(--turber-fg);
+  --color-popover: var(--turber-bg-elevated);
+  --color-popover-foreground: var(--turber-fg);
+  --color-primary: var(--turber-accent);
+  --color-primary-foreground: var(--turber-accent-fg, #ffffff);
+  --color-secondary: var(--turber-surface-hover);
+  --color-secondary-foreground: var(--turber-fg);
+  --color-muted: var(--turber-surface);
+  --color-muted-foreground: var(--turber-fg-muted);
+  --color-accent: var(--turber-surface-hover);
+  --color-accent-foreground: var(--turber-fg);
+  --color-destructive: var(--turber-danger);
+  --color-destructive-foreground: #ffffff;
+  --color-border: var(--turber-border);
+  --color-input: var(--turber-border);
+  --color-ring: var(--turber-accent);
+  --color-sidebar: var(--turber-sidebar, var(--turber-bg-elevated));
+  --color-sidebar-foreground: var(--turber-fg);
+  --color-sidebar-primary: var(--turber-accent);
+  --color-sidebar-primary-foreground: var(--turber-accent-fg, #ffffff);
+  --color-sidebar-accent: var(--turber-surface-hover);
+  --color-sidebar-accent-foreground: var(--turber-fg);
+  --color-sidebar-border: var(--turber-border);
+  --color-sidebar-ring: var(--turber-accent);
+  --color-turber-bg: var(--turber-bg);
+  --color-turber-bg-elevated: var(--turber-bg-elevated);
+  --color-turber-surface: var(--turber-surface);
+  --color-turber-surface-hover: var(--turber-surface-hover);
+  --color-turber-border: var(--turber-border);
+  --color-turber-fg: var(--turber-fg);
+  --color-turber-fg-muted: var(--turber-fg-muted);
+  --color-turber-accent: var(--turber-accent);
+  --color-turber-accent-2: var(--turber-accent-2);
+  --color-turber-danger: var(--turber-danger);
+  --color-turber-success: var(--turber-success);
+  --radius-turber: var(--turber-radius);
+  --radius-turber-sm: var(--turber-radius-sm);
+  --font-turber: var(--turber-font);
+  --font-turber-mono: var(--turber-font-mono);
+}
+
+:root {
+  --sidebar-width: 16rem;
+  --sidebar-width-icon: 3rem;
+  --radius-lg: var(--turber-radius);
+  --radius-md: calc(var(--turber-radius) - 2px);
+  --radius-sm: calc(var(--turber-radius) - 4px);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+  color: var(--turber-fg);
+  font-family: var(--turber-font);
+  font-size: var(--turber-font-size);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/*
+ * Tailwind v4 中 border 默认取 currentColor，深色主题下会沿面板边缘渲染出近白色描边。
+ * 统一把默认边框色收敛到主题 border token，消除各面板边缘的「白条」。
+ */
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+}
+
+::selection {
+  background: color-mix(in oklab, var(--turber-accent) 40%, transparent);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--turber-fg) 18%, transparent);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.turber-surface {
+  background: var(--turber-surface);
+  border: 1px solid var(--turber-border);
+  border-radius: var(--turber-radius);
+}
+
+.turber-muted {
+  color: var(--turber-fg-muted);
+}
+
+.turber-fade-in {
+  animation: turber-fade-in var(--turber-transition) both;
+}
+
+@keyframes turber-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.turber-scroll {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

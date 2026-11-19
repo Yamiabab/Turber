@@ -1,0 +1,21 @@
+/* 深色预设：近黑中性，强调色取浅灰以维持低饱和 */
+:root[data-turber-theme="next-dark"] {
+  color-scheme: dark;
+  --turber-bg: #151515;
+  --turber-sidebar: #111111;
+  --turber-bg-elevated: #1a1a1a;
+  --turber-surface: #212121;
+  --turber-surface-hover: #2a2a2a;
+  --turber-border: #2e2e2e;
+  --turber-fg: #f0efec;
+  --turber-fg-muted: #8c8a86;
+  --turber-accent: #f0efec;
+  --turber-accent-2: #b9b5ae;
+  --turber-accent-fg: #111111;
+  --turber-field: #20201f;
+  --turber-danger: #f2555a;
+  --turber-success: #34d399;
+  --turber-radius: 10px;
+  --turber-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  --turber-opacity: 1;
+}

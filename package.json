@@ -1,0 +1,59 @@
+{
+  "name": "turber",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "可换肤的本地优先桌面 AI 客户端",
+  "license": "AGPL-3.0-only",
+  "author": "Turber",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yamiabab/Turber.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Yamiabab/Turber/issues"
+  },
+  "homepage": "https://github.com/Yamiabab/Turber#readme",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@assistant-ui/react": "^0.15.36",
+    "@assistant-ui/react-lexical": "^0.2.23",
+    "@assistant-ui/react-markdown": "^0.14.26",
+    "@monaco-editor/react": "^4.7.0",
+    "@radix-ui/react-avatar": "^1.3.1",
+    "@radix-ui/react-dialog": "^1.3.1",
+    "@radix-ui/react-slot": "^1.5.0",
+    "@radix-ui/react-tooltip": "^1.4.1",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.8.4",
+    "@tauri-apps/plugin-opener": "^2",
+    "assistant-stream": "^0.3.57",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.73.0",
+    "monaco-editor": "^0.57.0",
+    "motion": "^14.14.0",
+    "radix-ui": "^1.8.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remark-gfm": "^4.0.1",
+    "tailwind-merge": "^3.7.0",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@tauri-apps/cli": "^2",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^6.0.2",
+    "tailwindcss": "^4.3.5",
+    "tw-animate-css": "^1.4.0",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16"
+  }
+}
