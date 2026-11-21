@@ -43,7 +43,8 @@
           "English"
         ],
         "displayLanguageSelector": true,
-        "minimumWebview2Version": "110"
+        "minimumWebview2Version": "110",
+        "installerIcon": "icons/icon.ico"
       }
     },
     "icon": [

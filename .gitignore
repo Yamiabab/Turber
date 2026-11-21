@@ -45,3 +45,6 @@ src-tauri/gen
 
 # 构建日志临时文件
 /src-tauri/*.txt
+
+src-tauri/icons/android/
+src-tauri/icons/ios/
