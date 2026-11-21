@@ -1,4 +1,0 @@
-    Checking turber v0.1.0 (K:\Turber\src-tauri)
-src\screen.rs:180:26: warning: value assigned to `result` is never read: this value is reassigned later and never used
-warning: `turber` (lib) generated 1 warning
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.64s

@@ -5,7 +5,10 @@
   "type": "module",
   "description": "可换肤的本地优先桌面 AI 客户端",
   "license": "AGPL-3.0-only",
-  "author": "Turber",
+  "author": {
+    "name": "DeepSeek",
+    "url": "https://github.com/deepseek-ai"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Yamiabab/Turber.git"
