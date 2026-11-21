@@ -97,7 +97,19 @@ This published snapshot contains the frontend and the local account service only
 
 ## Contributors
 
-- **DeepSeek** — [github.com/deepseek-ai](https://github.com/deepseek-ai)
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/deepseek-ai">
+        <img src="https://avatars.githubusercontent.com/u/148330874?v=4" width="72" alt="DeepSeek" /><br />
+        <sub><b>DeepSeek</b></sub>
+      </a><br />
+      <sub><a href="https://github.com/deepseek-ai">@deepseek-ai</a></sub>
+    </td>
+  </tr>
+</table>
+
+Maintained by **DeepSeek** — [github.com/deepseek-ai](https://github.com/deepseek-ai).
 
 ## License
 
