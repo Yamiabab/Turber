@@ -1,14 +1,3 @@
----
-AIGC:
-    Label: "1"
-    ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: e02b66b0b4cf27c6de3344f74d002f78_93d7f1b1e54211f1a9b8525400f8a581
-    ReservedCode1: gP9amBldCPLdOjy5H0bekc8tnRrMuA2WVzNgzSIOl7F7YDKEyRMwj2Vvgggm0txIHyeZu7wT7SfjeNd4h/KdoSABRW95QW24Kng9qVwlIh2kcTueVCD5oKBUp+VBKUjHEAjZtti1GIbr1i0Z/61cxOgdNsVV76Q2U93kc7jmzffl++q5hSAaXs/bz8U=
-    ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: e02b66b0b4cf27c6de3344f74d002f78_93d7f1b1e54211f1a9b8525400f8a581
-    ReservedCode2: gP9amBldCPLdOjy5H0bekc8tnRrMuA2WVzNgzSIOl7F7YDKEyRMwj2Vvgggm0txIHyeZu7wT7SfjeNd4h/KdoSABRW95QW24Kng9qVwlIh2kcTueVCD5oKBUp+VBKUjHEAjZtti1GIbr1i0Z/61cxOgdNsVV76Q2U93kc7jmzffl++q5hSAaXs/bz8U=
----
-
 <div align="center">
 
 # Turber
