@@ -6,8 +6,8 @@
   "description": "可换肤的本地优先桌面 AI 客户端",
   "license": "AGPL-3.0-only",
   "author": {
-    "name": "DeepSeek",
-    "url": "https://github.com/deepseek-ai"
+    "name": "Claude",
+    "url": "https://github.com/Claude"
   },
   "repository": {
     "type": "git",
