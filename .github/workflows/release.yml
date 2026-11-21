@@ -122,7 +122,7 @@ jobs:
           - label: Windows x64
             os: windows-latest
             target: x86_64-pc-windows-msvc
-            bundles: nsis,msi
+            bundles: nsis
           - label: Windows arm64
             os: windows-latest
             target: aarch64-pc-windows-msvc

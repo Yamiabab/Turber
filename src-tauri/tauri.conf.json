@@ -29,11 +29,22 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": [
+      "nsis"
+    ],
     "windows": {
       "certificateThumbprint": "D87CB5D4B7E01C9B4B6FFD3168C25FEDC5EE0F80",
       "digestAlgorithm": "sha256",
-      "timestampUrl": "http://timestamp.digicert.com"
+      "timestampUrl": "http://timestamp.digicert.com",
+      "nsis": {
+        "installMode": "both",
+        "languages": [
+          "SimpChinese",
+          "English"
+        ],
+        "displayLanguageSelector": true,
+        "minimumWebview2Version": "110"
+      }
     },
     "icon": [
       "icons/32x32.png",
