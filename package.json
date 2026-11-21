@@ -1,7 +1,7 @@
 {
   "name": "turber",
   "private": true,
-  "version": "0.1.0",
+  "version": "26.0.0-snapshot-first-1",
   "type": "module",
   "description": "可换肤的本地优先桌面 AI 客户端",
   "license": "AGPL-3.0-only",

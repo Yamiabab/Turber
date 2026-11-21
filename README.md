@@ -106,6 +106,13 @@ This published snapshot contains the frontend and the local account service only
       </a><br />
       <sub><a href="https://github.com/Claude">@Claude</a></sub>
     </td>
+    <td align="center">
+      <a href="https://github.com/Yamiabab">
+        <img src="https://avatars.githubusercontent.com/u/338602190?v=4" width="72" alt="Yamiabab" /><br />
+        <sub><b>Yamiabab</b></sub>
+      </a><br />
+      <sub><a href="https://github.com/Yamiabab">@Yamiabab</a></sub>
+    </td>
   </tr>
 </table>
 
