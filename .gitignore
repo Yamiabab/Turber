@@ -40,7 +40,8 @@ src-tauri/gen
 .env.*
 
 # 本地开发环境与工具目录（不纳入版本管理）
-/.github/
 /.vscode/
 /server/ui/
-/src-tauri/
+
+# 构建日志临时文件
+/src-tauri/*.txt

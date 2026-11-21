@@ -1,0 +1,183 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "版本号 x.y.z（留空则用 tauri.conf.json 的版本）"
+        required: false
+        type: string
+      draft:
+        description: "生成为草稿 Release（false 则直接发布）"
+        required: false
+        type: string
+        default: "true"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Resolve version
+    runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      tag: ${{ steps.v.outputs.tag }}
+      release_id: ${{ steps.rel.outputs.release_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: v
+        name: 解析版本并确保 tag 存在
+        shell: bash
+        run: |
+          set -euo pipefail
+          INPUT="${{ github.event.inputs.version }}"
+          if [ -n "${INPUT}" ]; then
+            VERSION="${INPUT}"
+          elif [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF_NAME#v}"
+          else
+            VERSION="$(node -p "require('./src-tauri/tauri.conf.json').version" | tr -d '\r\n')"
+          fi
+          if ! [[ "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::非法版本号 '${VERSION}'，MSI 目标要求纯数字 x.y.z"
+            exit 1
+          fi
+          TAG="v${VERSION}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            echo "tag ${TAG} 已存在，复用"
+          else
+            git tag "${TAG}"
+            git push origin "refs/tags/${TAG}"
+            echo "已创建并推送 tag ${TAG}"
+          fi
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "tag=${TAG}" >> "${GITHUB_OUTPUT}"
+          echo "版本 ${VERSION} / 标签 ${TAG}"
+
+      - id: rel
+        name: 创建或复用 Release（避免多 job 并发建 release 冲突）
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.v.outputs.tag }}"
+          VERSION="${{ steps.v.outputs.version }}"
+          DRAFT="${{ github.event_name != 'workflow_dispatch' || github.event.inputs.draft != 'false' }}"
+          API="https://api.github.com/repos/${GITHUB_REPOSITORY}/releases"
+          RJSON="/tmp/release.json"
+          read_id() { node -p "JSON.parse(require('fs').readFileSync('${RJSON}','utf8')).id"; }
+          CODE=$(curl -sS -o "${RJSON}" -w '%{http_code}' \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H 'Accept: application/vnd.github+json' "${API}/tags/${TAG}")
+          if [ "${CODE}" = "200" ]; then
+            REL_ID=$(read_id)
+            echo "复用已存在 Release ${REL_ID}"
+          else
+            BODY=$(printf 'Turber %s\\n\\n- Windows: .msi / .exe (NSIS)\\n- macOS: .dmg (Apple Silicon / Intel)\\n- Linux: .deb / .AppImage' "${VERSION}")
+            PAYLOAD=$(printf '{"tag_name":"%s","name":"Turber %s","body":"%s","draft":%s,"prerelease":false}' \
+              "${TAG}" "${TAG}" "${BODY}" "${DRAFT}")
+            CODE=$(curl -sS -o "${RJSON}" -w '%{http_code}' -X POST \
+              -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'Content-Type: application/json' \
+              "${API}" -d "${PAYLOAD}")
+            if [ "${CODE}" = "201" ]; then
+              REL_ID=$(read_id)
+              echo "已创建 Release ${REL_ID}（draft=${DRAFT}）"
+            elif [ "${CODE}" = "422" ]; then
+              curl -sS -o "${RJSON}" -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                -H 'Accept: application/vnd.github+json' "${API}/tags/${TAG}"
+              REL_ID=$(read_id)
+              echo "并发创建冲突，回查得到 Release ${REL_ID}"
+            else
+              echo "::error::创建 Release 失败 HTTP ${CODE}"
+              cat "${RJSON}"
+              exit 1
+            fi
+          fi
+          echo "release_id=${REL_ID}" >> "${GITHUB_OUTPUT}"
+
+  build:
+    name: ${{ matrix.label }}
+    needs: prepare
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: Windows x64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            bundles: nsis,msi
+          - label: Windows arm64
+            os: windows-latest
+            target: aarch64-pc-windows-msvc
+            bundles: nsis
+          - label: macOS arm64 (Apple Silicon)
+            os: macos-latest
+            target: aarch64-apple-darwin
+            bundles: dmg
+          - label: macOS x64 (Intel)
+            os: macos-latest
+            target: x86_64-apple-darwin
+            bundles: dmg
+          - label: Linux x64
+            os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            bundles: deb,appimage
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+          key: ${{ matrix.target }}
+
+      - name: Install Linux dependencies
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Apply version
+        shell: bash
+        env:
+          TURBER_VERSION: ${{ needs.prepare.outputs.version }}
+        run: node scripts/set-version.mjs "${TURBER_VERSION}"
+
+      - name: Build and upload
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          releaseId: ${{ needs.prepare.outputs.release_id }}
+          args: --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
