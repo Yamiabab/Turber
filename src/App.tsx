@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AppShell } from "./components/layout/AppShell";
+import PetApp from "./pet/App";
 import { useSettingsStore } from "./core/store/useSettingsStore";
 import { applyAppearance, applyTheme, applyUserCss, loadUserCss } from "./core/theme/themeEngine";
 import { applyCssOverrides, loadCssOverrides } from "./core/theme/cssOverrides";
@@ -32,7 +32,7 @@ function App() {
     void loadCssOverrides().then(applyCssOverrides);
   }, []);
 
-  return <AppShell />;
+  return <PetApp />;
 }
 
 export default App;

@@ -1,7 +1,11 @@
 mod ai;
+mod asr;
 mod ide;
+mod kws;
 mod screen;
 mod store;
+mod tts;
+mod voice;
 
 use std::collections::HashMap;
 use std::fs;
@@ -121,9 +125,14 @@ fn open_external(url: String) -> Result<(), String> {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    voice::start_music_watcher();
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
+        .setup(|app| {
+            voice::spawn_startup(app.handle().clone());
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             load_user_css,
             save_user_css,
@@ -131,6 +140,17 @@ pub fn run() {
             save_css_overrides,
             open_external,
             diag_log,
+            voice::music_playing,
+            voice::music_level,
+            voice::expand_window,
+            voice::collapse_window,
+            voice::voice_wake_start,
+            voice::voice_wake_state,
+            voice::voice_wake_now,
+            voice::tts_voices,
+            voice::wake_reply,
+            voice::speak,
+            voice::speak_stop,
             ide::ide_get_root,
             ide::ide_pick_folder,
             ide::ide_set_root,

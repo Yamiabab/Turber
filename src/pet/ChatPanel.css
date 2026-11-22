@@ -1,0 +1,122 @@
+.chat {
+  position: absolute;
+  left: 50%;
+  bottom: calc(clamp(16px, 4vmin, 32px) + 148px);
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  width: min(720px, calc(100% - 40px));
+  max-height: min(46vh, 420px);
+  transform: translateX(-50%);
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  animation: chat-in 260ms cubic-bezier(0.22, 0.9, 0.28, 1);
+}
+
+@keyframes chat-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.chat__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px 6px;
+  flex: none;
+}
+
+.chat__title {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.45);
+}
+
+.chat__list {
+  padding: 2px 2px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.chat__list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat__list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+.chat__empty {
+  margin: 6px 0 2px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(245, 245, 245, 0.34);
+}
+
+.chat__row {
+  display: flex;
+}
+
+.chat__row--user {
+  justify-content: flex-end;
+}
+
+.chat__row--assistant {
+  justify-content: flex-start;
+}
+
+.chat__bubble {
+  max-width: 82%;
+  padding: 9px 13px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.68;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.chat__bubble--user {
+  background: rgba(255, 255, 255, 0.14);
+  color: #f7f7fa;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.chat__bubble--assistant {
+  background: transparent;
+  color: #f2f2f4;
+  padding-left: 0;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
+}
+
+.chat__bubble--error {
+  color: #fca5a5;
+  padding-left: 0;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+.chat__bubble--pending {
+  color: rgba(245, 245, 245, 0.5);
+}
+
+.chat__row--thinking .chat__bubble {
+  padding: 6px 2px 4px;
+  background: transparent;
+  color: rgba(200, 214, 255, 0.86);
+}
+
+.chat__think {
+  --ll-font: 12.5px;
+}

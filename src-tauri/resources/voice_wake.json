@@ -1,0 +1,20 @@
+{
+  "engines": [
+    {
+      "model_dir": "kws-zh-en-3M",
+      "feature_dim": 80,
+      "keywords_score": 2.0,
+      "keywords_threshold": 0.15,
+      "mic_gain": 2.5
+    }
+  ],
+  "reply_voice": "zh-CN-XiaoyiNeural",
+  "reply_text": "我在呢",
+  "asr": {
+    "model_dir": "asr-zh-en-int8",
+    "model_type": "transducer",
+    "feature_dim": 80,
+    "num_threads": 2,
+    "rule2_min_trailing_silence": 0.6
+  }
+}
