@@ -1,0 +1,64 @@
+name: Bug report
+description: Something is broken or behaves unexpectedly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: please check whether the issue also happens with a fresh conversation.
+        If the problem is about **computer control**, include the AIPU / AMO state — most reports turn out to be a permission layer being off.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what actually happened.
+      placeholder: |
+        1. Opened the control panel and enabled AIPU → AMO → system-wide mouse
+        2. Asked the assistant to click a button in Notepad
+        3. The cursor moved but the click landed in the wrong window
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Turber version
+      placeholder: 26.0.1
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: Windows 11 24H2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Model backend
+      options:
+        - Ollama (local)
+        - DeepSeek
+        - OpenAI
+        - Moonshot
+        - SiliconFlow
+        - Other OpenAI-compatible endpoint
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Model name
+      placeholder: qwen2.5:7b
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Drag images here. Console output from the dev build is welcome too.
+      render: shell

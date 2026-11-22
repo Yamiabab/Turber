@@ -48,3 +48,6 @@ src-tauri/gen
 
 src-tauri/icons/android/
 src-tauri/icons/ios/
+
+# 宣传物料（视频与封面，体积大，不进版本库）
+/promo/
