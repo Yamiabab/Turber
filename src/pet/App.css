@@ -356,6 +356,18 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.titlebar__menu-mark {
+  margin-left: auto;
+  padding-left: 10px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(235, 235, 242, 0.42);
+}
+
+.titlebar__menu-item[data-on] .titlebar__menu-mark {
+  color: rgba(159, 216, 255, 0.95);
+}
+
 .settings {
   position: absolute;
   inset: 0;

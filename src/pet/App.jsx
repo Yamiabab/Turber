@@ -48,6 +48,30 @@ const say = (text, voice = WAKE_REPLY_VOICE, rate = 0, pitch = 0) => {
   invoke('speak', { text, voice, rate, pitch }).catch(() => {});
 };
 
+const SPEAK_MAX = 4000;
+
+const speakable = text => {
+  let out = String(text || '');
+  out = out.replace(/```[\s\S]*?```/g, ' ');
+  out = out.replace(/~~~[\s\S]*?~~~/g, ' ');
+  out = out.replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1');
+  out = out.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
+  out = out.replace(/`([^`]*)`/g, '$1');
+  out = out.replace(/^\s{0,3}#{1,6}\s+/gm, '');
+  out = out.replace(/^\s{0,3}>\s?/gm, '');
+  out = out.replace(/^\s*[-*+]\s+/gm, '');
+  out = out.replace(/^\s*\d+[.)]\s+/gm, '');
+  out = out.replace(/^\s*\|.*\|\s*$/gm, ' ');
+  out = out.replace(/^\s*[-:|\s]{3,}$/gm, ' ');
+  out = out.replace(/(\*\*|__|\*|_|~~)/g, '');
+  out = out.replace(/<[^>]+>/g, ' ');
+  out = out.replace(/[\u2500-\u257F]/g, ' ');
+  out = out.replace(/[ \t]+/g, ' ');
+  out = out.replace(/\n{2,}/g, '\n').trim();
+  if (out.length > SPEAK_MAX) out = `${out.slice(0, SPEAK_MAX)}……`;
+  return out;
+};
+
 const IconMinimize = () => (
   <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
     <path d="M3 8h10" fill="none" stroke="currentColor" strokeWidth="1.3" />
@@ -73,7 +97,17 @@ const IconClose = () => (
   </svg>
 );
 
-function TitleBar({ voice = 'off', listening = false, fxKey = 0, asrText = '', asrFinal = false, t, showMenu = false }) {
+function TitleBar({
+  voice = 'off',
+  listening = false,
+  fxKey = 0,
+  asrText = '',
+  asrFinal = false,
+  t,
+  showMenu = false,
+  voiceReply = true,
+  onToggleVoiceReply
+}) {
   const [maximized, setMaximized] = useState(false);
 
   useEffect(() => {
@@ -115,7 +149,9 @@ function TitleBar({ voice = 'off', listening = false, fxKey = 0, asrText = '', a
 
   return (
     <div className="titlebar" aria-label={voiceHint(t, voice)}>
-      {showMenu && <MenuButton t={t} />}
+      {showMenu && (
+        <MenuButton t={t} voiceReply={voiceReply} onToggleVoiceReply={onToggleVoiceReply} />
+      )}
       <div className="titlebar__drag" data-tauri-drag-region onDoubleClick={toggleMaximize} />
       <div key={fxKey} className={`titlebar__beam${listening ? ' titlebar__beam--on' : ''}`} aria-hidden="true" />
       {asrText ? (
@@ -162,6 +198,13 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [chatOpen, setChatOpen] = useState(false);
   const [sending, setSending] = useState(false);
+  const [voiceReply, setVoiceReply] = useState(() => {
+    try {
+      return window.localStorage.getItem('mino.voiceReply') !== 'off';
+    } catch {
+      return true;
+    }
+  });
   const settingsLanguage = useSettingsStore(state => state.language);
   const apis = useSettingsStore(state => state.apis);
   const activeApiId = useSettingsStore(state => state.activeApiId);
@@ -183,8 +226,23 @@ export default function App() {
   const sendRef = useRef(null);
   const barApi = useRef(null);
   const lastVoice = useRef({ text: '', at: 0 });
+  const voiceReplyRef = useRef(voiceReply);
   const lang = settingsLanguage === 'en-US' ? 'en' : 'zh';
   const t = STRINGS[lang] || STRINGS.zh;
+
+  useEffect(() => {
+    voiceReplyRef.current = voiceReply;
+    try {
+      window.localStorage.setItem('mino.voiceReply', voiceReply ? 'on' : 'off');
+    } catch {}
+  }, [voiceReply]);
+
+  const speakReply = text => {
+    if (!windowApi() || !voiceReplyRef.current) return;
+    const spoken = speakable(text);
+    if (!spoken) return;
+    say(spoken, replyRef.current.voice, WAKE_RATE, WAKE_PITCH);
+  };
 
   const stopChat = () => {
     abortRef.current?.abort();
@@ -195,6 +253,7 @@ export default function App() {
     const value = String(text || '').trim();
     if (!value) return false;
     if (chatBusyRef.current) return false;
+    if (windowApi()) invoke('speak_abort').catch(() => {});
     chatBusyRef.current = true;
     const userId = `m${++msgSeq.current}`;
     const replyId = `m${++msgSeq.current}`;
@@ -241,6 +300,7 @@ export default function App() {
         prev.map(item => (item.id === replyId ? { ...item, content: finalText, pending: false } : item))
       );
       historyRef.current = [...history, { role: 'assistant', content: finalText }];
+      speakReply(finalText);
       return true;
     } catch (err) {
       const reason = typeof err === 'string' ? err : err?.message || '请求失败';
@@ -533,6 +593,8 @@ export default function App() {
         asrFinal={asrFinal}
         t={t}
         showMenu={entered}
+        voiceReply={voiceReply}
+        onToggleVoiceReply={setVoiceReply}
       />
       <main className="stage">{!entered && <SlideCommit holdMs={0} onDone={handleDone} />}</main>
       {entered && (

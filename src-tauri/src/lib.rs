@@ -151,6 +151,7 @@ pub fn run() {
             voice::wake_reply,
             voice::speak,
             voice::speak_stop,
+            voice::speak_abort,
             ide::ide_get_root,
             ide::ide_pick_folder,
             ide::ide_set_root,

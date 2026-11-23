@@ -19,7 +19,13 @@ const IconGear = () => (
   </svg>
 );
 
-export function MenuButton({ t }) {
+const IconVolume = () => (
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
+    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.06A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z" />
+  </svg>
+);
+
+export function MenuButton({ t, voiceReply = true, onToggleVoiceReply }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
   const setSettingsOpen = useSettingsStore(state => state.setSettingsOpen);
@@ -77,6 +83,18 @@ export function MenuButton({ t }) {
           >
             <IconGear />
             <span>{t.settings}</span>
+          </button>
+          <button
+            type="button"
+            className="titlebar__menu-item"
+            role="menuitemcheckbox"
+            aria-checked={voiceReply}
+            data-on={voiceReply ? '' : undefined}
+            onClick={() => onToggleVoiceReply?.(!voiceReply)}
+          >
+            <IconVolume />
+            <span>{t.voiceReply}</span>
+            <span className="titlebar__menu-mark">{voiceReply ? t.voiceReplyOn : t.voiceReplyOff}</span>
           </button>
         </div>
       )}

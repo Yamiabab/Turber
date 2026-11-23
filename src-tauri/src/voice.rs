@@ -282,6 +282,11 @@ pub fn speak_stop() -> bool {
     SPEAKING.load(Ordering::SeqCst)
 }
 
+#[tauri::command]
+pub fn speak_abort() {
+    tts::abort_playback();
+}
+
 fn animate_window(window: tauri::Window, target_w: f64, target_h: f64) {
     std::thread::spawn(move || {
         let scale = match window.scale_factor() {
