@@ -29,11 +29,6 @@ const enterApp = () => {
   invoke('expand_window').catch(() => {});
 };
 
-const collapseApp = () => {
-  if (!windowApi()) return;
-  invoke('collapse_window').catch(() => {});
-};
-
 const IDLE_TIMEOUT = 180000;
 const IDLE_EVENTS = ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart', 'mino:activity'];
 
@@ -185,6 +180,7 @@ function TitleBar({
 
 export default function App() {
   const [entered, setEntered] = useState(false);
+  const [idle, setIdle] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [mode, setMode] = useState('text');
   const [awake, setAwake] = useState(false);
@@ -336,22 +332,23 @@ export default function App() {
   useEffect(() => {
     if (!entered) return;
     let timer = 0;
-    const goIdle = () => {
-      const panels = useSettingsStore.getState();
-      if (panels.settingsOpen || panels.controlPanelOpen) {
-        timer = window.setTimeout(goIdle, IDLE_TIMEOUT);
-        return;
-      }
-      window.clearTimeout(enterTimer.current);
-      setEntered(false);
-      collapseApp();
+    const arm = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const panels = useSettingsStore.getState();
+        if (panels.settingsOpen || panels.controlPanelOpen) {
+          arm();
+          return;
+        }
+        setIdle(true);
+      }, IDLE_TIMEOUT);
     };
     const reset = () => {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(goIdle, IDLE_TIMEOUT);
+      setIdle(false);
+      arm();
     };
     IDLE_EVENTS.forEach(name => window.addEventListener(name, reset, { passive: true }));
-    reset();
+    arm();
     return () => {
       window.clearTimeout(timer);
       IDLE_EVENTS.forEach(name => window.removeEventListener(name, reset));
@@ -584,7 +581,7 @@ export default function App() {
   };
 
   return (
-    <div className="app">
+    <div className={`app${idle ? ' app--idle' : ''}`}>
       <TitleBar
         voice={voice}
         listening={listening || asrLive}
@@ -596,8 +593,15 @@ export default function App() {
         voiceReply={voiceReply}
         onToggleVoiceReply={setVoiceReply}
       />
-      <main className="stage">{!entered && <SlideCommit holdMs={0} onDone={handleDone} />}</main>
-      {entered && (
+      <main className="stage">
+        {!entered && <SlideCommit holdMs={0} onDone={handleDone} />}
+        {entered && (
+          <div className="face">
+            <PetFace playing={playing} levelRef={levelRef} awake={awake} listening={listening} pan={pan} dim={chatOpen} />
+          </div>
+        )}
+      </main>
+      {entered && !idle && (
         <ChatPanel
           open={chatOpen}
           messages={messages}
@@ -608,7 +612,6 @@ export default function App() {
       )}
       {entered && (
         <div className="composer">
-          <PetFace playing={playing} levelRef={levelRef} awake={awake} listening={listening} pan={pan} dim={chatOpen} />
           <PromptBar
             width={720}
             mode={mode}
